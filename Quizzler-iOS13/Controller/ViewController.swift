@@ -10,50 +10,49 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var scoresLbl: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var trueButton: UIButton!
     @IBOutlet weak var falseButton: UIButton!
     @IBOutlet weak var progressBar: UIProgressView!
-    
-    let quizBrain = QuizBrain()
+
+    var quizBrain = QuizBrain()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         progressBar.progress = 0
+        questionLabel.text = quizBrain.getQuestionText()
     }
 
     @IBAction func answerButtonPressed(_ sender: UIButton) {
         let userAnswer = sender.currentTitle ?? ""
-        quizBrain.checkAnswer(userAnswer)
-        
-        let actualAnswer = quiz[questionNumber].answer
+        let userGotItRight = quizBrain.checkAnswer(userAnswer)
 
-        if userAnswer == actualAnswer {
-            print("Correct!")
+        if userGotItRight {
             sender.backgroundColor = UIColor.green
         } else {
-            print("Incorrect!")
             sender.backgroundColor = UIColor.red
         }
 
-        if questionNumber + 1 < quiz.count {
-            questionNumber += 1
-        } else {
-            questionNumber = 0
-        }
+        quizBrain.nextQuestion()
 
         Timer.scheduledTimer(
-            timeInterval: 0.2, target: self, selector: #selector(updateUI),
-            userInfo: nil, repeats: false)
+            timeInterval: 0.2,
+            target: self,
+            selector: #selector(updateUI),
+            userInfo: nil,
+            repeats: false
+        )
 
     }
 
     @objc
     func updateUI() {
-        questionLabel.text = quiz[questionNumber].text
+        questionLabel.text = quizBrain.getQuestionText()
+        scoresLbl.text = "Score : \(quizBrain.getScore())"
         trueButton.backgroundColor = UIColor.clear
         falseButton.backgroundColor = UIColor.clear
-        progressBar.progress = Float(questionNumber + 1) / Float(quiz.count)
+        progressBar.progress = quizBrain.getProgress()
     }
 }
