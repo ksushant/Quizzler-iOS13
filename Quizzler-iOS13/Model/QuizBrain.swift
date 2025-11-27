@@ -1,20 +1,12 @@
 //
-//  ViewController.swift
+//  QuizBrain.swift
 //  Quizzler-iOS13
 //
-//  Created by Angela Yu on 12/07/2019.
-//  Copyright © 2019 The App Brewery. All rights reserved.
+//  Created by Sushant Patil on 24/11/25.
+//  Copyright © 2025 The App Brewery. All rights reserved.
 //
 
-import UIKit
-
-class ViewController: UIViewController {
-
-    @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButton: UIButton!
-    @IBOutlet weak var progressBar: UIProgressView!
-
+struct QuizBrain {
     let quiz = [
         Question(q: "A slug's blood is green.", a: "True"),
         Question(
@@ -52,41 +44,14 @@ class ViewController: UIViewController {
                 "Chocolate affects a dog's heart and nervous system; a few ounces are enough to kill a small dog.",
             a: "True"),
     ]
+
     var questionNumber = 0
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        progressBar.progress = 0
-    }
-
-    @IBAction func answerButtonPressed(_ sender: UIButton) {
-        let userAnswer = sender.currentTitle
-        let actualAnswer = quiz[questionNumber].answer
-
-        if userAnswer == actualAnswer {
-            print("Correct!")
-            sender.backgroundColor = UIColor.green
+    func checkAnswer(_ userAnswer: String) {
+        if userAnswer == quiz[questionNumber].answer {
+            // right
         } else {
-            print("Incorrect!")
-            sender.backgroundColor = UIColor.red
+            // wrong
         }
-
-        if questionNumber + 1 < quiz.count {
-            questionNumber += 1
-        } else {
-            questionNumber = 0
-        }
-        
-        Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
-        
-    }
-
-    @objc
-    func updateUI() {
-        questionLabel.text = quiz[questionNumber].text
-        trueButton.backgroundColor = UIColor.clear
-        falseButton.backgroundColor = UIColor.clear
-        progressBar.progress = Float(questionNumber + 1) / Float(quiz.count)
     }
 }
